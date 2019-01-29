@@ -1,27 +1,26 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
+import Web3 from "web3";
+
+var web3 = new Web3("wss://mainnet.infura.io/_ws");
+
+const subscription = web3.eth
+  .subscribe("newBlockHeaders", function(error, result) {
+    if (!error) console.log(result);
+  })
+  .on("data", function(transaction) {
+    console.log(transaction);
+  });
 
 class App extends Component {
+  componentWillUnmount() {
+    subscription.unsubscribe(function(error, success) {
+      if (success) console.log("Successfully unsubscribed!");
+    });
+  }
+
   render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+    return <div className="App" />;
   }
 }
 
