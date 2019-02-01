@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import * as THREE from 'three';
-
 class ThreeScene extends Component{
   componentDidMount(){
     const width = this.mount.clientWidth
@@ -21,46 +20,40 @@ class ThreeScene extends Component{
     this.renderer.setSize(width, height)
     this.mount.appendChild(this.renderer.domElement)
     //ADD CUBE
-
-    //const sphere = new THREE.Mesh(new THREE.SphereGeometry(1, 10, 10));
-    const geometry = new THREE.SphereGeometry( 1, 10, 10 );
-    const material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-    const sphere = new THREE.Mesh(new THREE.SphereGeometry(1, 10, 10), {color: 0xffff00});
-    this.scene.add(sphere);
-    }
-
-  componentWillUnmount(){
+    const geometry = new THREE.BoxGeometry(1, 1, 1)
+    const material = new THREE.MeshBasicMaterial({ color: '#433F81'     })
+    this.cube = new THREE.Mesh(geometry, material)
+    this.scene.add(this.cube)
+this.start()
+  }
+componentWillUnmount(){
     this.stop()
     this.mount.removeChild(this.renderer.domElement)
   }
-
-  start = () => {
+start = () => {
     if (!this.frameId) {
       this.frameId = requestAnimationFrame(this.animate)
     }
   }
-
-  stop = () => {
+stop = () => {
     cancelAnimationFrame(this.frameId)
   }
-
-  animate = () => {
+animate = () => {
+   this.cube.rotation.x += 0.01
+   this.cube.rotation.y += 0.01
    this.renderScene()
    this.frameId = window.requestAnimationFrame(this.animate)
-  }
-
-  renderScene = () => {
-    this.renderer.render(this.scene, this.camera)
-  }
-
-  render(){
+ }
+renderScene = () => {
+  this.renderer.render(this.scene, this.camera)
+}
+render(){
     return(
       <div
-        style={{ width:"600px" , height: "600px" }}
+        style={{ width: '400px', height: '400px' }}
         ref={(mount) => { this.mount = mount }}
       />
     )
   }
 }
-
 export default ThreeScene
