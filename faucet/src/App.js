@@ -20,10 +20,16 @@ class App extends Component {
         }
       })
       .on("data", transaction => {
-        console.log(transaction);
-        this.setState({
-          hashes: [...this.state.hashes, transaction.hash]
-        });
+        this.web3.eth
+          .getTransactionFromBlock(transaction.hash, 0)
+          .then(data => {
+            this.setState({
+              hashes: [
+                ...this.state.hashes,
+                this.web3.utils.fromWei(data.value)
+              ]
+            });
+          });
       });
   }
 
@@ -36,7 +42,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <h2>Hash:</h2>
+        <h2>Transactions:</h2>
         {this.state.hashes.map(hash => (
           <h2>{hash}</h2>
         ))}
